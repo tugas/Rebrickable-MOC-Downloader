@@ -2,6 +2,8 @@
 
 A Firefox extension that collects inventory exports from a Rebrickable MOC page and combines them into a ZIP file.
 
+![Rebrickable MOC Downloader progress page](snapshot.jpg)
+
 ## Requirements and compatibility
 
 Firefox 140 or later on desktop, or Firefox for Android 142 or later, is required, along with an active Rebrickable session in the same Firefox profile. These versions provide the built-in data-transmission consent prompt declared by this extension. The extension works on an open MOC page on `rebrickable.com`; it does not search for MOCs or bypass authentication, rate limits, or site security checks.

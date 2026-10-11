@@ -13,7 +13,9 @@
 
 ## Assets and Publishing
 
-- [ ] Add an extension icon and real screenshots of the popup and progress page for the AMO listing.
+- [x] Add an extension icon (`icons/icon.svg` and PNG sizes).
+- [ ] Capture a real popup screenshot for the AMO listing.
+- [x] Capture the progress page for the AMO listing (`snapshot.jpg`).
 - [x] Choose a license (MIT) and add the `LICENSE` file.
 - [x] Use GitHub Releases for version history; publish notes for each version.
 - [ ] Review the Gecko ID in `manifest.json` and choose a stable ID before publishing on AMO. The current value is an example ID; replace it with one controlled by the publisher.
@@ -21,3 +23,7 @@
 - [ ] Decide whether to publish a listed AMO add-on or request an unlisted signature for direct XPI distribution.
 - [ ] Submit the extension to AMO for validation/review and obtain a Mozilla signature.
 - [ ] Add the permanent AMO installation or download link to the README after publication/signing.
+
+## Cross-Browser Support
+
+- [ ] Add Google Chrome support, including any required manifest/API changes, and test the extension in Chrome.

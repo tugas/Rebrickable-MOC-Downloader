@@ -6,7 +6,7 @@ output_dir="$script_dir/web-ext-artifacts"
 output_file="$output_dir/rebrickable-moc-downloader.zip"
 manifest_file="$script_dir/manifest.json"
 
-files="manifest.json LICENSE README.md background.js content.js popup.css popup.html popup.js progress.css progress.html progress.js save-xml.html save-xml.js"
+files="manifest.json LICENSE README.md snapshot.jpg icons/icon.svg icons/icon-16.png icons/icon-32.png icons/icon-48.png icons/icon-96.png background.js content.js popup.css popup.html popup.js progress.css progress.html progress.js save-xml.html save-xml.js"
 
 version="$(sed -n 's/.*"version":[[:space:]]*"\([^"]*\)".*/\1/p' "$manifest_file")"
 if [ -z "$version" ]; then
