@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rebrickable MOC Downloader</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main>
+    <h1>Rebrickable MOC Downloader</h1>
+    <p id="current-moc" class="current-moc">Checking active tab…</p>
+    <label class="option"><input id="include-instructions" type="checkbox" checked> Include all building instruction files in ZIP</label>
+    <label class="option"><input id="include-html" type="checkbox"> Include HTML exports (Table and Grid)</label>
+    <button id="download" type="button">Download files</button>
+    <p id="status" role="status" aria-live="polite">Sign in to Rebrickable to export files, including BrickLink XML.</p>
+    <script src="popup.js"></script>
+  </main>
+</body>
+</html>

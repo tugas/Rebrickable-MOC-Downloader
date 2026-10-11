@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Progresso dos downloads</title>
+  <link rel="stylesheet" href="progress.css">
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">REBRICKABLE / DOWNLOAD</p>
+      <h1>Package for <span id="moc-id">MOC</span></h1>
+      <p id="summary">Preparing job…</p>
+    </header>
+    <section aria-label="Progresso dos exports">
+      <div class="progress-head"><span id="count">0 of 6</span><span id="percent">0%</span></div>
+      <div class="track"><div id="bar"></div></div>
+      <ol id="items"></ol>
+    </section>
+    <p id="notice" role="status" aria-live="polite">Exports will be combined into a ZIP named with the MOC ID.</p>
+    <p class="hint">Formats are collected with a delay to reduce rate limiting. HTML files are included only when enabled in the popup.</p>
+  </main>
+  <script src="progress.js"></script>
+</body>
+</html>
