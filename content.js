@@ -110,14 +110,22 @@ async function startExports(exportLinks, message) {
     report({ current: index, total: queue.length + 1, items, status: `Processing ${index + 1} of ${queue.length}: ${item.name}` });
 
     try {
+      const sourceUrl = item.instructionUrl || (item.modal
+        ? new URL(item.link.dataset.url, location.origin).href
+        : item.link.href);
       const blob = item.modal
         ? await fetchBricklinkXml(item.link)
-        : await fetchExport(item.instructionUrl || item.link.href, item.filename);
+        : await fetchExport(sourceUrl, item.filename);
       files.push({ filename: item.filename, data: new Uint8Array(await blob.arrayBuffer()) });
       items[index].state = "Adicionado ao ZIP";
+      items[index].sourceUrl = sourceUrl;
     } catch (error) {
       fileErrors.push(`${item.name}: ${error.message}`);
       items[index].state = "Falhou";
+      items[index].error = error.message;
+      items[index].sourceUrl = item.instructionUrl || (item.link
+        ? item.modal ? new URL(item.link.dataset.url, location.origin).href : item.link.href
+        : "Unavailable");
       if (error.rateLimited) {
         report({ current: index, total: queue.length + 1, items, done: true, error: error.message, status: "Queue stopped by Rebrickable's rate limit." });
         return;
@@ -133,6 +141,10 @@ async function startExports(exportLinks, message) {
   }
 
   const zipFilename = getZipFilename(message.mocId);
+  files.push({
+    filename: "source-details.txt",
+    data: new TextEncoder().encode(makeSourceDetails(message.mocId, queue, items)),
+  });
   items.push({ name: zipFilename, state: "Creating ZIP" });
   report({ current: queue.length, total: queue.length + 1, items, status: "Creating ZIP…" });
   const zipBlob = makeZip(files);
@@ -154,6 +166,33 @@ async function startExports(exportLinks, message) {
     error: fileErrors.join(" "),
     status: `ZIP ${zipFilename} created with ${files.length} files${fileErrors.length ? `; ${fileErrors.length} file(s) failed` : ""}.`,
   });
+}
+
+function makeSourceDetails(mocId, queue, items) {
+  const title = document.querySelector("h1")?.textContent.trim() || document.title.trim() || "Unavailable";
+  const description = document.querySelector('meta[name="description"]')?.content.trim() || "Unavailable";
+  const inventorySummary = [...document.querySelectorAll("p")]
+    .find((paragraph) => /approximate cost of these parts is/i.test(paragraph.textContent))
+    ?.textContent.trim() || "Unavailable";
+  const lines = [
+    "Rebrickable MOC download details",
+    "",
+    `MOC ID: ${mocId}`,
+    `Title: ${title}`,
+    `Page URL: ${location.href}`,
+    `Description: ${description}`,
+    `Inventory details: ${inventorySummary}`,
+    "",
+    "Files and source URLs:",
+  ];
+
+  queue.forEach((item, index) => {
+    lines.push(`- ${item.filename} (${items[index].state})`);
+    lines.push(`  Source: ${items[index].sourceUrl || "Unavailable"}`);
+    if (items[index].error) lines.push(`  Error: ${items[index].error}`);
+  });
+
+  return `${lines.join("\n")}\n`;
 }
 
 function getZipFilename(mocId) {

@@ -21,7 +21,7 @@ Temporary add-ons are intended for development and testing and are removed when 
 
 ## Exported files
 
-By default, the ZIP file `MOC-ID.zip` includes Rebrickable CSV, LEGO Pick-A-Brick CSV, BrickLink XML, BrickStore BSX, and LDCad PBG. **Include all building instruction files in ZIP** is enabled by default and includes files available under **Download the free Building Instructions**. Uncheck it in the popup to exclude them. **Include HTML exports (Table and Grid)** adds both HTML exports; this preference is saved for future use.
+By default, the ZIP file `MOC-ID.zip` includes Rebrickable CSV, LEGO Pick-A-Brick CSV, BrickLink XML, BrickStore BSX, and LDCad PBG. It also contains `source-details.txt` with the MOC page URL, title and available details, plus the source URL and download status for each requested file. **Include all building instruction files in ZIP** is enabled by default and includes files available under **Download the free Building Instructions**. Uncheck it in the popup to exclude them. **Include HTML exports (Table and Grid)** adds both HTML exports; this preference is saved for future use.
 
 Exports are collected with a 15-second delay between requests. The progress tab shows each file's status. If a request fails, the queue continues where possible and may create a partial ZIP containing successfully retrieved files. If the server returns HTTP 429, the queue stops.
 
