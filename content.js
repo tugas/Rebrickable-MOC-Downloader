@@ -105,7 +105,7 @@ async function startExports(exportLinks, message) {
   report({ current: 0, total: queue.length + 1, items, status: "Collecting exports and instructions for the ZIP…" });
 
   for (let index = 0; index < queue.length; index += 1) {
-    if (index > 0) await new Promise((resolve) => window.setTimeout(resolve, 15000));
+    if (index > 0) await new Promise((resolve) => window.setTimeout(resolve, 5000));
     const item = queue[index];
     report({ current: index, total: queue.length + 1, items, status: `Processing ${index + 1} of ${queue.length}: ${item.name}` });
 
