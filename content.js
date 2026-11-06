@@ -79,12 +79,8 @@ async function startExports(exportLinks, message) {
     ? [...instructionContainer.querySelectorAll('a[href]')]
       .map((anchor) => {
         const filename = anchor.querySelector("[title]")?.title || anchor.title || anchor.textContent.trim();
-        const url = /\/mocs\/purchases\/download\//.test(new URL(anchor.href).pathname)
-          ? anchor.href
-          : anchor.dataset.url && /\/mocs\/\d+\/files\/\d+\//.test(anchor.dataset.url)
-            ? new URL(anchor.dataset.url, location.origin).href
-            : null;
-        return { href: url, filename };
+        const resolveUrl = () => resolveInstructionUrl(anchor);
+        return { anchor, resolveUrl, href: resolveUrl(), filename };
       })
       .filter((item) => item.href && item.filename)
     : [];
@@ -93,7 +89,9 @@ async function startExports(exportLinks, message) {
       formats.push({
         name: `Building Instructions ${index + 1}`,
         filename: sanitizeFilename(instruction.filename),
+        instructionAnchor: instruction.anchor,
         instructionUrl: instruction.href,
+        resolveInstructionUrl: instruction.resolveUrl,
       });
     }
   }
@@ -110,7 +108,7 @@ async function startExports(exportLinks, message) {
     report({ current: index, total: queue.length + 1, items, status: `Processing ${index + 1} of ${queue.length}: ${item.name}` });
 
     try {
-      const sourceUrl = item.instructionUrl || (item.modal
+      const sourceUrl = (item.resolveInstructionUrl ? item.resolveInstructionUrl() : null) || item.instructionUrl || (item.modal
         ? new URL(item.link.dataset.url, location.origin).href
         : item.link.href);
       const blob = item.modal
@@ -123,7 +121,7 @@ async function startExports(exportLinks, message) {
       fileErrors.push(`${item.name}: ${error.message}`);
       items[index].state = "Falhou";
       items[index].error = error.message;
-      items[index].sourceUrl = item.instructionUrl || (item.link
+      items[index].sourceUrl = (item.resolveInstructionUrl ? item.resolveInstructionUrl() : null) || item.instructionUrl || (item.link
         ? item.modal ? new URL(item.link.dataset.url, location.origin).href : item.link.href
         : "Unavailable");
       if (error.rateLimited) {
@@ -245,6 +243,15 @@ async function fetchExport(url, filename) {
     throw new Error(`${filename}: Rebrickable requires manual verification; the content was not included in the ZIP.`);
   }
   return blob;
+}
+
+function resolveInstructionUrl(anchor) {
+  if (!anchor.isConnected) return null;
+  if (/\/mocs\/purchases\/download\//.test(new URL(anchor.href).pathname)) return anchor.href;
+  if (anchor.dataset.url && /\/mocs\/\d+\/files\/\d+\//.test(anchor.dataset.url)) {
+    return new URL(anchor.dataset.url, location.origin).href;
+  }
+  return null;
 }
 
 function sanitizeFilename(filename) {
